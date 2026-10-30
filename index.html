@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>能量地图 · 12题心理小测试</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:#f7f3ee;color:#2f2a26;min-height:100vh}
+.app{max-width:620px;margin:0 auto;padding:18px 14px 40px}
+.card{background:#fffdfa;border:1px solid #e8ddd2;border-radius:18px;padding:22px 18px;box-shadow:0 8px 30px rgba(80,60,40,.06)}
+h1{font-size:21px;line-height:1.4;margin-bottom:10px}
+h2{font-size:17px;color:#8a4f2e;margin-bottom:8px}
+h3{font-size:15px;margin:12px 0 4px}
+.sub{color:#7a6a5c;font-size:14px;line-height:1.7;margin-bottom:16px}
+.btn{display:inline-block;background:#b5653a;color:#fff;border:none;border-radius:999px;padding:13px 28px;font-size:15px;cursor:pointer;transition:background .2s,transform .1s;width:100%;font-weight:600}
+.btn:active{transform:scale(.98)}
+.btn:disabled{opacity:.4}
+.btn2{background:#efe5da;color:#6b4f3a}
+.hidden{display:none!important}
+.progress{font-size:12px;color:#9a8a7a;margin-bottom:8px;display:flex;justify-content:space-between}
+.bar{height:6px;background:#efe5da;border-radius:999px;overflow:hidden;margin-bottom:18px}
+.fill{height:100%;background:#b5653a;width:0;transition:width .3s;border-radius:999px}
+
+.scene-card{border-radius:16px;padding:22px 16px;margin-bottom:16px;text-align:center;position:relative;overflow:hidden}
+.scene-emoji{font-size:44px;line-height:1;margin-bottom:10px;display:block;filter:drop-shadow(0 4px 8px rgba(0,0,0,.08))}
+.scene-text{font-size:15px;line-height:1.7;color:#3a332d;font-weight:500;position:relative;z-index:1}
+.scene-card::after{content:'';position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.35)}
+.q-title{font-size:16px;font-weight:600;line-height:1.6;margin-bottom:14px}
+
+.slots{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.slot{background:#fbf7f2;border:2px dashed #e0d3c4;border-radius:12px;padding:10px 8px;min-height:62px;font-size:12px;color:#a89888;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;transition:all .2s;position:relative}
+.slot.highlight{border-color:#b5653a;background:#fbeee5;transform:scale(1.02)}
+.slot.filled{border-style:solid;border-color:#c98a63;background:#fff8f2;color:#4a4038}
+.slot-rank{font-size:11px;color:#b5653a;font-weight:700;margin-bottom:4px}
+.slot-text{font-size:12px;line-height:1.45;color:#4a4038;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+
+.cards{display:flex;flex-direction:column;gap:9px}
+.card-item{background:#fffdfa;border:1.5px solid #e8ddd2;border-radius:13px;padding:13px 14px;font-size:14px;line-height:1.55;color:#3a332d;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;transition:border-color .15s,background .15s,opacity .2s;position:relative}
+.card-item:active{cursor:grabbing}
+.card-item.dragging-source{opacity:.25}
+.card-item.placed{opacity:0;pointer-events:none}
+.card-item.ghost{position:fixed;pointer-events:none;z-index:9999;box-shadow:0 12px 30px rgba(120,80,40,.25);border-color:#b5653a;background:#fff8f2;transform-origin:center}
+
+.pair-cards{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.pair-card{background:#fffdfa;border:1.5px solid #e8ddd2;border-radius:13px;padding:14px 15px;font-size:14px;line-height:1.55;color:#3a332d;cursor:pointer;transition:all .18s;position:relative}
+.pair-card.most{border-color:#5a9e6f;background:#eef8f0;box-shadow:0 0 0 2px rgba(90,158,111,.15)}
+.pair-card.least{border-color:#c98a63;background:#f5efe9;opacity:.7}
+.pair-card .tag{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px}
+.pair-card.most .tag{background:#5a9e6f;color:#fff}
+.pair-card.least .tag{background:#c98a63;color:#fff}
+.pair-hint{font-size:13px;color:#8a7a6c;line-height:1.6;background:#fbf7f2;border-radius:12px;padding:10px 12px;margin-bottom:12px}
+
+.result-section{margin-bottom:22px}
+.row{display:flex;align-items:center;gap:9px;margin:6px 0;font-size:13px}
+.lab{width:78px;color:#6a5a4c;flex-shrink:0;font-size:12px}
+.trk{flex:1;height:9px;background:#efe5da;border-radius:999px;overflow:hidden}
+.fil{height:100%;background:#c98a63;border-radius:999px;transition:width .8s cubic-bezier(.2,.7,.3,1)}
+.fil.hot{background:#b5653a}
+.num{width:26px;text-align:right;color:#9a8a7a;font-size:11px}
+.note{font-size:13px;color:#8a7a6c;line-height:1.7;background:#fbf7f2;border-radius:12px;padding:12px 14px;margin-top:10px}
+.divider{height:1px;background:#eee2d6;margin:18px 0}
+.result-section p,.result-section li{font-size:14px;line-height:1.75;color:#4a4038}
+.result-section ul{padding-left:18px;margin:6px 0}
+.nav{display:flex;gap:10px;margin-top:16px}
+.nav .btn{flex:1}
+@media(max-width:400px){.slots{grid-template-columns:1fr}.slot{min-height:50px;flex-direction:row;justify-content:flex-start;gap:8px;text-align:left}.slot-text{-webkit-line-clamp:2}}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- 开场 -->
+<div id="screen-start" class="card">
+  <h1>能量地图</h1>
+  <p class="sub">12 道情景题，约 4 分钟。帮你看清：什么在给你充电、什么在抽干你、哪一刻你最像自己。</p>
+  <p class="sub">排序题可以 <b>拖拽</b> 卡片到槽位，也可以 <b>直接点击</b> 卡片自动入位。每放一张都有音效反馈。</p>
+  <button class="btn" onclick="startQuiz()">开始测试</button>
+</div>
+
+<!-- 答题 -->
+<div id="screen-quiz" class="card hidden">
+  <div class="progress"><span id="prog-label">第 1 / 12 题</span><span id="prog-pct">8%</span></div>
+  <div class="bar"><div class="fill" id="prog-fill"></div></div>
+  <div id="scene-card" class="scene-card"><span class="scene-emoji" id="scene-emoji"></span><div class="scene-text" id="scene-text"></div></div>
+  <div class="q-title" id="q-title"></div>
+  <div id="rank-area" class="hidden">
+    <div class="slots" id="slots"></div>
+    <div class="cards" id="cards"></div>
+  </div>
+  <div id="pair-area" class="hidden">
+    <div class="pair-hint" id="pair-hint">先点一个 <b>最像你</b> 的，再点一个 <b>最不像你</b> 的。可以再点取消。</div>
+    <div class="pair-cards" id="pair-cards"></div>
+  </div>
+  <div class="nav"><button class="btn hidden" id="next-btn" onclick="nextQuestion()">下一题</button></div>
+</div>
+
+<!-- 结果 -->
+<div id="screen-result" class="card hidden">
+  <div id="result-content"></div>
+  <div class="nav"><button class="btn btn2" onclick="restart()">重新测试</button></div>
+</div>
+
+</div>
+
+<script>
+/* ===== 音效 ===== */
+let actx=null;
+function audioInit(){if(!actx){try{actx=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(actx&&actx.state==='suspended')actx.resume()}
+function tone(freq,dur,type,vol,delay){if(!actx)return;const t=actx.currentTime+(delay||0);const o=actx.createOscillator(),g=actx.createGain();o.type=type||'sine';o.frequency.setValueAtTime(freq,t);g.gain.setValueAtTime(0.001,t);g.gain.exponentialRampToValueAtTime(vol||0.12,t+0.01);g.gain.exponentialRampToValueAtTime(0.001,t+dur);o.connect(g);g.connect(actx.destination);o.start(t);o.stop(t+dur+0.05)}
+function sfx(name){audioInit();
+  if(name==='place1'){tone(523,.12,'sine',.1,0);tone(784,.15,'sine',.08,.06)}
+  else if(name==='place2'){tone(587,.12,'sine',.1,0);tone(880,.15,'sine',.08,.06)}
+  else if(name==='place3'){tone(659,.12,'sine',.1,0);tone(988,.15,'sine',.08,.06)}
+  else if(name==='place4'){tone(698,.12,'sine',.1,0);tone(1047,.15,'sine',.08,.06)}
+  else if(name==='complete'){tone(523,.1,'sine',.1,0);tone(659,.1,'sine',.1,.08);tone(784,.1,'sine',.1,.16);tone(1047,.3,'sine',.12,.24)}
+  else if(name==='pick'){tone(440,.07,'triangle',.09,0)}
+  else if(name==='unpick'){tone(330,.08,'sawtooth',.04,0)}
+  else if(name==='click'){tone(600,.05,'sine',.06,0)}
+}
+
+/* ===== 题目数据 ===== */
+const QUIZ=[
+{type:'rank',dim:'fuel',emoji:'💼',bg:'linear-gradient(135deg,#fde8d0,#f5c9a0)',
+ scene:'周五下午 5:47，你刚想关电脑，老板在群里 @ 你："有个急活，下周一要。" 没有更多信息。',
+ q:'你第一反应最接近哪个？按"最像我"到"最不像我"排序',
+ options:[{text:'打开文档，先做出一个能看的东西再说',key:'c'},{text:'先私聊问清楚：这个到底给谁看、解决什么问题',key:'n'},{text:'搜一下类似案例，搞清楚这类活的套路',key:'e'},{text:'列个清单，把能控的部分先排好',key:'o'}]},
+
+{type:'rank',dim:'drain',emoji:'📱',bg:'linear-gradient(135deg,#e3d5f0,#c9b3e0)',
+ scene:'周一早上，你打开工作群，看到 99+ 条未读，其中三条 @ 你，还有两个会议邀请。',
+ q:'你身体的第一反应最接近哪个？按"最强烈"到"最不强烈"排序',
+ options:[{text:'心里一紧：又要被比较、被评价了',key:'j'},{text:'一阵烦躁：又要应付人情和站队了',key:'t'},{text:'提不起劲：又是一堆没反馈的琐事',key:'x'},{text:'想关机：又被安排得满满当当',key:'h'}]},
+
+{type:'rank',dim:'fuel',emoji:'🌞',bg:'linear-gradient(135deg,#fdf3d0,#f5e0a0)',
+ scene:'一个完全空白的周六下午，手机没消息，没人找你。',
+ q:'你最可能做什么？按"最可能"到"最不可能"排序',
+ options:[{text:'动手做点东西：做饭、写东西、拍视频、拼模型',key:'c'},{text:'约一个朋友出来，或者给谁打个长电话',key:'n'},{text:'打开一个教程/书/课程，学点一直想学的',key:'e'},{text:'收拾房间、运动、把生活整理一遍',key:'o'}]},
+
+{type:'rank',dim:'drain',emoji:'🚪',bg:'linear-gradient(135deg,#f0d5d5,#e0b3b3)',
+ scene:'以下四个场景，你一想起来就想逃。',
+ q:'哪个最让你想逃？按"最想逃"到"最不想逃"排序',
+ options:[{text:'要上台展示、被当众点评',key:'j'},{text:'要参加一个全是陌生人的饭局，还得寒暄',key:'t'},{text:'要做一份不知道有没有人看、没人给反馈的报告',key:'x'},{text:'要被临时塞进一个混乱、没人说清楚规则的项目',key:'h'}]},
+
+{type:'pair',dim:'fuel',emoji:'✨',bg:'linear-gradient(135deg,#fde8d0,#f5c9a0)',
+ scene:'你刚完成一件小事，关掉电脑。',
+ q:'以下哪种"完成感"最像你？先选最像，再选最不像。',
+ options:[{text:'我做了一个属于自己的东西',key:'c'},{text:'我帮到了一个具体的人',key:'n'},{text:'我弄懂了一个之前不会的东西',key:'e'},{text:'我把一件事干净利落地完成了',key:'o'}]},
+
+{type:'rank',dim:'fuel',emoji:'⏰',bg:'linear-gradient(135deg,#d5e8f0,#b3d0e0)',
+ scene:'回想最近一周，你什么时候最容易忘记看手机？',
+ q:'按"最容易忘记时间"到"最不容易"排序',
+ options:[{text:'在做一个属于自己的东西时',key:'c'},{text:'和一个人聊得很深时',key:'n'},{text:'在解一个难题、学一个新东西时',key:'e'},{text:'在运动、整理、按计划做事时',key:'o'}]},
+
+{type:'rank',dim:'drain',emoji:'🪞',bg:'linear-gradient(135deg,#e0d5f0,#c0b3e0)',
+ scene:'什么事做完后，你最容易"越做越看不起自己"？',
+ q:'按"最容易"到"最不容易"排序',
+ options:[{text:'我在迎合别人，说违心的话',key:'j'},{text:'我在伤害或忽视身边的人',key:'t'},{text:'我在浪费时间，什么也没学到',key:'x'},{text:'我没有掌控权，只是在应付',key:'h'}]},
+
+{type:'pair',dim:'fuel',emoji:'💬',bg:'linear-gradient(135deg,#fdf3d0,#f5e0a0)',
+ scene:'有人问你"你最近在忙什么？"',
+ q:'你心里最想回答的是哪个？先选最像，再选最不像。',
+ options:[{text:'"在做一个自己的小项目"',key:'c'},{text:'"在陪一个朋友度过难关"',key:'n'},{text:'"在学一个很有意思的东西"',key:'e'},{text:'"在把生活整理得更有节奏"',key:'o'}]},
+
+{type:'rank',dim:'drain',emoji:'🔋',bg:'linear-gradient(135deg,#f0d5d5,#e0b3b3)',
+ scene:'以下四种"累"，哪种你最受不了？',
+ q:'按"最受不了"到"最受得了"排序',
+ options:[{text:'被比较、被评价的累',key:'j'},{text:'应付人情、维持关系的累',key:'t'},{text:'做了很多但没人看见的累',key:'x'},{text:'被安排、被指挥的累',key:'h'}]},
+
+{type:'pair',dim:'drain',emoji:'🌙',bg:'linear-gradient(135deg,#d5e8f0,#b3d0e0)',
+ scene:'你晚上躺在床上，回想今天。',
+ q:'哪种念头最让你睡不着？先选最像，再选最不像。',
+ options:[{text:'"我今天表现得好不好？别人怎么看我？"',key:'j'},{text:'"我今天有没有让谁不舒服？关系有没有问题？"',key:'t'},{text:'"我今天到底做了什么有用的事？"',key:'x'},{text:'"我今天有多少时间是自己的？"',key:'h'}]},
+
+{type:'rank',dim:'fuel',emoji:'🌱',bg:'linear-gradient(135deg,#d5f0d5,#b3e0b3)',
+ scene:'如果接下来一年没人评价你、没人给你点赞。',
+ q:'你仍然愿意坚持做的是？按"最愿意"到"最不愿意"排序',
+ options:[{text:'创作、记录、表达',key:'c'},{text:'陪伴、倾听、帮具体的人',key:'n'},{text:'学习、研究、探索',key:'e'},{text:'运动、整理、完成小目标',key:'o'}]},
+
+{type:'pair',dim:'drain',emoji:'😮‍💨',bg:'linear-gradient(135deg,#e0d5f0,#c0b3e0)',
+ scene:'以下四种消耗，你最想立刻躲开。',
+ q:'哪个最想躲？先选最像，再选最不像。',
+ options:[{text:'被拿来和别人比较',key:'j'},{text:'不得不维持表面关系',key:'t'},{text:'做了很多但没有任何反馈',key:'x'},{text:'被别人安排得满满当当',key:'h'}]}
+];
+
+const FI={
+ c:{n:'创造表达型',s:'从无到有做出东西、表达自己',a:'完成一个小作品给一个人看；真诚表达一次观点',x:'每周做一个小作品（一页笔记、一顿饭、一段录音），发给信任的人',w:'别把价值绑在点赞上；先完成，再完美'},
+ n:{n:'连接贡献型',s:'与人深度连接、帮具体的人变好',a:'主动帮一个人小忙；约信任的人聊 30 分钟',x:'每周做一次"具体的小帮助"，记录对方的变化',w:'别过度讨好，别把别人情绪全背身上'},
+ e:{n:'探索钻研型',s:'学习、研究、弄懂一个东西',a:'记录"今天弄懂了什么"；把学到的讲给别人听',x:'选一个好奇的小主题，两周内学到能讲给别人听',w:'别用"学不完"否定自己；学习要有小出口'},
+ o:{n:'掌控秩序型',s:'整理、规划、完成、身体掌控',a:'每天完成一件可打勾的小事；运动 20 分钟',x:'连续七天，每天完成一件"可控的小事"并打勾',w:'别把掌控变僵化；完成比完美重要'}
+};
+const DI={
+ j:{n:'被评判雷区',d:'被比较、被贬低、要展示自己、迎合别人',w:'你的价值不靠当众表现决定。先在小范围低风险处表达；练习说"我在练习，不需要完美"'},
+ t:{n:'人际纠缠雷区',d:'冲突、讨好、虚伪寒暄、站队、复杂人情',w:'你需要边界。练习说"我需要想一下""这个我不参与"；减少消耗性社交，增加一对一深度连接'},
+ x:{n:'无反馈重复雷区',d:'重复琐事、看不到结果、没学到东西、没反馈',w:'给任务加反馈：记录进度、设小里程碑、问"对谁有用"；长期无反馈就考虑换任务'},
+ h:{n:'失控混乱雷区',d:'被指挥、计划打乱、无边界任务、局面失控',w:'你需要边界和缓冲。提前说清范围、留缓冲、把大任务拆成可控小块；每天留一段自己说了算的时间'}
+};
+
+/* ===== 状态 ===== */
+let current=0;
+let answers=[];
+let order=[null,null,null,null];
+let pairAnswer={most:null,least:null};
+let drag=null;
+
+function startQuiz(){
+  audioInit();
+  sfx('click');
+  document.getElementById('screen-start').classList.add('hidden');
+  document.getElementById('screen-quiz').classList.remove('hidden');
+  current=0;answers=[];order=[null,null,null,null];pairAnswer={most:null,least:null};
+  render();
+}
+
+function render(){
+  const q=QUIZ[current];
+  const pct=Math.round((current+1)/QUIZ.length*100);
+  document.getElementById('prog-label').textContent='第 '+(current+1)+' / '+QUIZ.length+' 题';
+  document.getElementById('prog-pct').textContent=pct+'%';
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('scene-card').style.background=q.bg;
+  document.getElementById('scene-emoji').textContent=q.emoji;
+  document.getElementById('scene-text').textContent=q.scene;
+  document.getElementById('q-title').textContent=q.q;
+  document.getElementById('next-btn').classList.add('hidden');
+
+  if(q.type==='rank'){
+    document.getElementById('rank-area').classList.remove('hidden');
+    document.getElementById('pair-area').classList.add('hidden');
+    renderRank(q);
+  }else{
+    document.getElementById('rank-area').classList.add('hidden');
+    document.getElementById('pair-area').classList.remove('hidden');
+    renderPair(q);
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ===== 排序题 ===== */
+function renderRank(q){
+  order=[null,null,null,null];
+  const slots=document.getElementById('slots');
+  const cards=document.getElementById('cards');
+  slots.innerHTML='';cards.innerHTML='';
+  for(let i=0;i<4;i++){
+    const s=document.createElement('div');
+    s.className='slot';s.dataset.slot=i;
+    s.innerHTML='<span class="slot-rank">第 '+(i+1)+' 名</span><span class="slot-text">拖到这里</span>';
+    s.onclick=()=>{ /* 点击已填槽位可撤回 */ if(order[i]!==null) unplaceCard(i); };
+    slots.appendChild(s);
+  }
+  const idxs=[0,1,2,3].sort(()=>Math.random()-0.5);
+  idxs.forEach(idx=>{
+    const c=document.createElement('div');
+    c.className='card-item';c.dataset.card=idx;
+    c.textContent=q.options[idx].text;
+    bindDrag(c,idx,q);
+    cards.appendChild(c);
+  });
+}
+
+function bindDrag(el,idx,q){
+  el.addEventListener('pointerdown',e=>{
+    if(e.pointerType==='mouse'&&e.button!==0)return;
+    if(el.classList.contains('placed'))return;
+    e.preventDefault();
+    const rect=el.getBoundingClientRect();
+    const ghost=el.cloneNode(true);
+    ghost.className='card-item ghost';
+    ghost.style.cssText='position:fixed;left:'+rect.left+'px;top:'+rect.top+'px;width:'+rect.width+'px;height:'+rect.height+'px;pointer-events:none;z-index:9999;box-shadow:0 12px 30px rgba(120,80,40,.25);border-color:#b5653a;background:#fff8f2;';
+    document.body.appendChild(ghost);
+    drag={idx,el,ghost,startX:e.clientX,startY:e.clientY,startLeft:rect.left,startTop:rect.top,moved:false};
+    el.setPointerCapture(e.pointerId);
+    el.classList.add('dragging-source');
+  });
+  el.addEventListener('pointermove',e=>{
+    if(!drag||drag.el!==el)return;
+    const dx=e.clientX-drag.startX,dy=e.clientY-drag.startY;
+    if(Math.abs(dx)>6||Math.abs(dy)>6)drag.moved=true;
+    if(drag.moved){
+      drag.ghost.style.left=drag.startLeft+'px';
+      drag.ghost.style.top=drag.startTop+'px';
+      drag.ghost.style.transform='translate('+dx+'px,'+dy+'px)';
+      highlightSlot(getSlotAt(e.clientX,e.clientY));
+    }
+  });
+  el.addEventListener('pointerup',e=>{
+    if(!drag||drag.el!==el)return;
+    const moved=drag.moved;
+    if(drag.ghost)drag.ghost.remove();
+    el.classList.remove('dragging-source');
+    clearSlotHighlights();
+    drag=null;
+    if(moved){
+      const slot=getSlotAt(e.clientX,e.clientY);
+      if(slot&&order[parseInt(slot.dataset.slot)]===null) placeCard(idx,parseInt(slot.dataset.slot),q);
+    }else{
+      autoPlace(idx,q);
+    }
+  });
+  el.addEventListener('pointercancel',()=>{
+    if(drag&&drag.el===el){
+      if(drag.ghost)drag.ghost.remove();
+      el.classList.remove('dragging-source');
+      clearSlotHighlights();drag=null;
+    }
+  });
+}
+
+function getSlotAt(x,y){
+  const slots=document.querySelectorAll('.slot');
+  for(const s of slots){const r=s.getBoundingClientRect();if(x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom)return s}
+  return null;
+}
+function highlightSlot(slot){document.querySelectorAll('.slot').forEach(s=>s.classList.toggle('highlight',s===slot))}
+function clearSlotHighlights(){document.querySelectorAll('.slot').forEach(s=>s.classList.remove('highlight'))}
+
+function placeCard(cardIdx,slotIdx,q){
+  if(order[slotIdx]!==null)return;
+  order[slotIdx]=cardIdx;
+  const slot=document.querySelector('.slot[data-slot="'+slotIdx+'"]');
+  slot.classList.add('filled');
+  slot.querySelector('.slot-text').textContent=q.options[cardIdx].text;
+  const card=document.querySelector('.card-item[data-card="'+cardIdx+'"]');
+  if(card)card.classList.add('placed');
+  sfx('place'+(slotIdx+1));
+  checkRankComplete();
+}
+
+function autoPlace(cardIdx,q){
+  const empty=order.indexOf(null);
+  if(empty===-1)return;
+  placeCard(cardIdx,empty,q);
+}
+
+function unplaceCard(slotIdx){
+  if(order[slotIdx]===null)return;
+  const cardIdx=order[slotIdx];
+  order[slotIdx]=null;
+  const slot=document.querySelector('.slot[data-slot="'+slotIdx+'"]');
+  slot.classList.remove('filled');
+  slot.querySelector('.slot-text').textContent='拖到这里';
+  const card=document.querySelector('.card-item[data-card="'+cardIdx+'"]');
+  if(card)card.classList.remove('placed');
+  sfx('unpick');
+  document.getElementById('next-btn').classList.add('hidden');
+}
+
+function checkRankComplete(){
+  if(order.every(x=>x!==null)){
+    setTimeout(()=>{
+      sfx('complete');
+      const btn=document.getElementById('next-btn');
+      btn.textContent=current===QUIZ.length-1?'看结果':'下一题';
+      btn.classList.remove('hidden');
+    },250);
+  }
+}
+
+/* ===== 配对题 ===== */
+function renderPair(q){
+  pairAnswer={most:null,least:null};
+  const box=document.getElementById('pair-cards');
+  box.innerHTML='';
+  const idxs=[0,1,2,3].sort(()=>Math.random()-0.5);
+  idxs.forEach(idx=>{
+    const c=document.createElement('div');
+    c.className='pair-card';c.dataset.pair=idx;
+    c.textContent=q.options[idx].text;
+    c.onclick=()=>togglePair(idx,q,c);
+    box.appendChild(c);
+  });
+}
+
+function togglePair(idx,q,el){
+  if(pairAnswer.most===idx){pairAnswer.most=null;sfx('unpick')}
+  else if(pairAnswer.least===idx){pairAnswer.least=null;sfx('unpick')}
+  else if(pairAnswer.most===null){pairAnswer.most=idx;sfx('pick')}
+  else if(pairAnswer.least===null){pairAnswer.least=idx;sfx('pick')}
+  else{pairAnswer.most=idx;sfx('pick')}
+  updatePairUI(q);
+  if(pairAnswer.most!==null&&pairAnswer.least!==null){
+    setTimeout(()=>{
+      sfx('complete');
+      const btn=document.getElementById('next-btn');
+      btn.textContent=current===QUIZ.length-1?'看结果':'下一题';
+      btn.classList.remove('hidden');
+    },300);
+  }else{
+    document.getElementById('next-btn').classList.add('hidden');
+  }
+}
+
+function updatePairUI(q){
+  document.querySelectorAll('.pair-card').forEach(el=>{
+    const idx=parseInt(el.dataset.pair);
+    el.classList.remove('most','least');
+    const oldTag=el.querySelector('.tag');if(oldTag)oldTag.remove();
+    if(pairAnswer.most===idx){el.classList.add('most');const t=document.createElement('span');t.className='tag';t.textContent='最像';el.appendChild(t)}
+    else if(pairAnswer.least===idx){el.classList.add('least');const t=document.createElement('span');t.className='tag';t.textContent='最不像';el.appendChild(t)}
+  });
+}
+
+/* ===== 下一题 ===== */
+function nextQuestion(){
+  const q=QUIZ[current];
+  if(q.type==='rank'){
+    answers[current]=order.slice();
+  }else{
+    if(pairAnswer.most===null||pairAnswer.least===null)return;
+    answers[current]={most:pairAnswer.most,least:pairAnswer.least};
+  }
+  if(current<QUIZ.length-1){current++;render()}
+  else{showResult()}
+}
+
+/* ===== 计分 ===== */
+function calcScores(){
+  const fuel={c:0,n:0,e:0,o:0};
+  const drain={j:0,t:0,x:0,h:0};
+  QUIZ.forEach((q,i)=>{
+    const ans=answers[i];if(!ans)return;
+    if(q.type==='rank'){
+      ans.forEach((optIdx,rank)=>{
+        const key=q.options[optIdx].key;
+        const pts=4-rank;
+        if(q.dim==='fuel')fuel[key]+=pts;else drain[key]+=pts;
+      });
+    }else{
+      const mk=q.options[ans.most].key;
+      const lk=q.options[ans.least].key;
+      if(q.dim==='fuel'){fuel[mk]+=2;fuel[lk]-=1}
+      else{drain[mk]+=2;drain[lk]-=1}
+    }
+  });
+  return{fuel,drain};
+}
+
+/* ===== 结果 ===== */
+function showResult(){
+  const{fuel,drain}=calcScores();
+  const fuelMax=20,drainMax=20;
+  const fKeys=['c','n','e','o'],dKeys=['j','t','x','h'];
+  const fSorted=fKeys.slice().sort((a,b)=>fuel[b]-fuel[a]);
+  const dSorted=dKeys.slice().sort((a,b)=>drain[b]-drain[a]);
+  const topFuel=fuel[fSorted[0]],topDrain=drain[dSorted[0]];
+  const secondFuel=fSorted.find(k=>fuel[k]<topFuel);
+
+  let html='<h1>你的能量地图</h1><p class="sub">这不是标签，是当下的能量分布。把它当作实验线索，不是判决书。</p>';
+
+  html+='<div class="result-section"><h2>能量燃料</h2>';
+  fKeys.forEach(k=>{
+    const pct=Math.max(0,Math.round(fuel[k]/fuelMax*100));
+    html+='<div class="row"><span class="lab">'+FI[k].n.replace('型','')+'</span><div class="trk"><div class="fil'+(fuel[k]===topFuel?' hot':'')+'" style="width:'+pct+'%"></div></div><span class="num">'+fuel[k]+'</span></div>';
+  });
+  html+='</div>';
+
+  html+='<div class="result-section">';
+  fSorted.filter(k=>fuel[k]===topFuel).forEach(k=>{
+    const f=FI[k];
+    html+='<h2>主要燃料：'+f.n+'</h2><p><strong>你充电的方式：</strong>'+f.s+'。</p><h3>更能肯定自己的行动</h3><p>'+f.a+'</p><h3>一个小实验</h3><p>'+f.x+'</p><p class="note">提醒：'+f.w+'</p>';
+  });
+  if(secondFuel&&fuel[secondFuel]>0){
+    html+='<div class="divider"></div><h2>次要燃料：'+FI[secondFuel].n+'</h2><p>'+FI[secondFuel].s+'也能给你补充能量。主燃料暂时用不上时，可以从这里借力。</p>';
+  }
+  html+='</div>';
+
+  html+='<div class="result-section"><h2>耗竭雷区</h2>';
+  dKeys.forEach(k=>{
+    const pct=Math.max(0,Math.round(drain[k]/drainMax*100));
+    html+='<div class="row"><span class="lab">'+DI[k].n.replace('雷区','')+'</span><div class="trk"><div class="fil'+(drain[k]===topDrain?' hot':'')+'" style="width:'+pct+'%"></div></div><span class="num">'+drain[k]+'</span></div>';
+  });
+  html+='</div>';
+
+  html+='<div class="result-section">';
+  dSorted.filter(k=>drain[k]===topDrain).forEach(k=>{
+    const d=DI[k];
+    html+='<h2>主要雷区：'+d.n+'</h2><p><strong>最耗竭的：</strong>'+d.d+'。</p><p class="note">提醒：'+d.w+'</p>';
+  });
+  html+='</div>';
+
+  html+='<div class="result-section"><h2>未来七天，做三件事</h2><ul><li><strong>两件燃料事：</strong>一件 10–30 分钟，一件 1–2 小时，从上面小实验里选。</li><li><strong>改造一个雷区场景：</strong>设边界、加反馈、缩小范围，或暂时避开。</li><li><strong>每天睡前记三行：</strong>什么让我有劲？什么耗竭我？哪件事让我觉得"这才像我"？</li></ul><p class="note">七天后回看：哪类燃料和雷区反复出现，那就是下一步调整的线索。</p></div>';
+
+  document.getElementById('result-content').innerHTML=html;
+  document.getElementById('screen-quiz').classList.add('hidden');
+  document.getElementById('screen-result').classList.remove('hidden');
+  window.scrollTo({top:0,behavior:'smooth'});
+  sfx('complete');
+}
+
+function restart(){
+  audioInit();sfx('click');
+  document.getElementById('screen-result').classList.add('hidden');
+  document.getElementById('screen-start').classList.remove('hidden');
+  current=0;answers=[];order=[null,null,null,null];pairAnswer={most:null,least:null};
+}
+</script>
+</body>
+</html>
